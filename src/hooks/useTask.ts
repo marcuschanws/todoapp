@@ -31,11 +31,21 @@ export const useTasks = () => {
     
     try {
       const createRequest: { Description: string; Deadline?: string } = {
-    Description: description.trim(),
+        Description: description.trim(),
       };
       
       if (deadline) {
-    createRequest.Deadline = new Date(deadline).toISOString();
+        const localDate = new Date(deadline);
+        const utcIsoString = new Date(
+          Date.UTC(
+            localDate.getFullYear(),
+            localDate.getMonth(),
+            localDate.getDate(),
+            localDate.getHours(),
+            localDate.getMinutes()
+          )
+        ).toISOString()
+        createRequest.Deadline = utcIsoString;
       }
       
       await apiClient.post<Task>('/ToDoTasks/CreateTask/', createRequest);

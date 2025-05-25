@@ -1,6 +1,7 @@
 import { Task } from '../types/task';
 import { apiClient } from '../api/client';
 import { logger } from '../utility/logger';
+import { useState, useEffect } from 'react';
 
 interface TaskTableProps {
   tasks: Task[];
@@ -8,8 +9,16 @@ interface TaskTableProps {
 }
 
 export const TaskTable = ({ tasks, onUpdate }: TaskTableProps) => {
-  const isOverdue = (deadline?: string) => 
-    deadline && new Date(deadline) < new Date();
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Update time every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleToggle = async (ident: string) => {
     try {
@@ -33,6 +42,13 @@ export const TaskTable = ({ tasks, onUpdate }: TaskTableProps) => {
     }
   };
 
+  const isOverdue = (deadline?: string, isDone?: boolean) => {
+    if (!deadline || isDone) 
+      return false;
+
+    return new Date(deadline).getTime() < new Date().getTime();
+  };
+
   return (
     <table className="task-table">
       <thead>
@@ -50,8 +66,16 @@ export const TaskTable = ({ tasks, onUpdate }: TaskTableProps) => {
             className={`task-row ${!task.isDone && isOverdue(task.deadline) ? 'overdue' : ''}`}
           >
             <td>{task.description}</td>
-            <td>{task.deadline ? new Date(task.deadline).toLocaleString() : '-'}</td>
-            <td>{task.isDone ? 'Done' : 'Pending'}</td>
+            <td>{task.deadline ? new Date(task.deadline).toLocaleString() : 'No deadline'}</td>
+            <td>
+              {task.isDone ? (
+                'Done'
+              ) : isOverdue(task.deadline) ? (
+                <span className="overdue">Overdue</span>
+              ) : (
+                'Pending'
+              )}
+            </td>
             <td>
               <button onClick={() => handleToggle(task.identifier)}>
                 {task.isDone ? 'Undo' : 'Complete'}
