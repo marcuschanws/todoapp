@@ -92,6 +92,7 @@ export const TaskTable = ({ tasks, onUpdate }: TaskTableProps) => {
 
   // Filter buttons handler
   const handleFilterChange = (newFilter: typeof filter) => {
+    setError('');
     setFilter(newFilter);
     setCurrentPage(1);
   };
@@ -138,6 +139,7 @@ export const TaskTable = ({ tasks, onUpdate }: TaskTableProps) => {
       <table>
         <thead>
           <tr>
+            <th></th>
             <th>Description</th>
             <th>Deadline</th>
             <th>Status</th>
@@ -150,9 +152,11 @@ export const TaskTable = ({ tasks, onUpdate }: TaskTableProps) => {
             key={task.identifier}
             className={`task-row ${!task.isDone && isOverdue(task.deadline) ? 'overdue' : ''}`}
             >
-              
               <td>
                 <PriorityToggle task={task} onUpdate={onUpdate} />
+                <ErrorMessage message={error} />
+              </td>
+              <td>
                 <ErrorMessage message={error} />
                 <EditableDescription task={task} onUpdate={onUpdate} />
               </td>
@@ -206,7 +210,9 @@ export const TaskTable = ({ tasks, onUpdate }: TaskTableProps) => {
         <div className="pagination">
           <button className="pagination-btn"
             disabled={currentPage === 1}
-            onClick={() => setCurrentPage(currentPage - 1)}>
+            onClick={() => {
+              setError('');
+              setCurrentPage(currentPage - 1)}}>
             &lt;&lt;
           </button>
 
@@ -218,6 +224,7 @@ export const TaskTable = ({ tasks, onUpdate }: TaskTableProps) => {
               max={totalPages}
               value={currentPage}
               onChange={(e) => {
+                setError('');
                 const page = Math.max(1, Math.min(totalPages, Number(e.target.value)));
                 setCurrentPage(page);
               }}
@@ -228,7 +235,9 @@ export const TaskTable = ({ tasks, onUpdate }: TaskTableProps) => {
           
           <button className="pagination-btn"
             disabled={currentPage >= totalPages}
-            onClick={() => setCurrentPage(currentPage + 1)}>
+            onClick={() => {
+              setError('');
+              setCurrentPage(currentPage + 1)}}>
             &gt;&gt;
           </button>
         </div>

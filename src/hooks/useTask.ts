@@ -7,7 +7,9 @@ import '../App.css';
 
 export const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [error, setError] = useState('');
+  let [error, setError] = useState('');
+
+  const clearError = () => setError('');
 
   const fetchTasks = useCallback(async () => {
     try {
@@ -22,6 +24,8 @@ export const useTasks = () => {
   useEffect(() => { fetchTasks(); }, [fetchTasks]);
 
   const createTask = async (description: string, deadline?: string) => {
+    setError('');
+
     if (description.trim().length <= 10) {
       setError('Description must be at least 11 characters');
       return false;
@@ -61,5 +65,5 @@ export const useTasks = () => {
     }
   };
 
-  return { tasks, error, createTask, fetchTasks };
+  return { tasks, error, createTask, fetchTasks, clearError };
 };

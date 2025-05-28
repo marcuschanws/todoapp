@@ -5,11 +5,12 @@ import { ErrorMessage } from './components/ErrorMessage';
 import './App.css';
 
 export const App = () => {
-  const { tasks, error, createTask, fetchTasks } = useTasks();
+  const { tasks, error, createTask, fetchTasks, clearError } = useTasks();
   const [newTask, setNewTask] = useState({ description: '', deadline: '' });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    clearError();
     const success = await createTask(newTask.description, newTask.deadline);
 
     if (success) 
@@ -34,7 +35,11 @@ export const App = () => {
           className='task-input'
           title='Key in task (between 11 - 500 characters)'
           value={newTask.description}
-          onChange={e => setNewTask(p => ({ ...p, description: e.target.value }))}
+          onChange={e => {
+            clearError();
+            setNewTask(p => ({ ...p, description: e.target.value }));
+          }
+        }
           placeholder="Enter task (min. 11 characters)"
         />
         <ErrorMessage message={error} />
@@ -44,7 +49,11 @@ export const App = () => {
           title = 'Deadline for the task (optional)'
           type="datetime-local"
           value={newTask.deadline}
-          onChange={e => setNewTask(p => ({ ...p, deadline: e.target.value }))}
+          onChange={e => {
+            clearError();
+            setNewTask(p => ({ ...p, deadline: e.target.value })); 
+          }
+        }
         />
         <button type="submit" title='Save task' className='submit-task'>Add Task</button>
       </form>

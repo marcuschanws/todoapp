@@ -371,8 +371,8 @@ input:focus {
 .description-edit-input {
   display: inline-block;
   min-width: fit-content;
-  width: 250px;
-  max-width: 250px;
+  width: 350px;
+  max-width: 350px;
 }
 
 .edit-icon {
@@ -450,10 +450,14 @@ th, td {
   position: relative;
 }
 
+th:nth-child(1), td:nth-child(1) {
+  width: 2%;
+}
+
 /* Description column */
-td:nth-child(1) {
-  width: 40%; /* Fixed width for description */
-  max-width: 400px;
+th:nth-child(2), td:nth-child(2) {
+  width: 35%; /* Fixed width for description */
+  max-width: 350px;
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word !important;
@@ -467,13 +471,13 @@ td:nth-child(1) {
 }
 
 /* Deadline column */
-td:nth-child(2) {
-  width: 30%;
-  max-width: 300px;
+th:nth-child(3), td:nth-child(3) {
+  width: 25%;
+  max-width: 250px;
 }
 
 /* Status column */
-td:nth-child(3) {
+th:nth-child(4), td:nth-child(4) {
   width: 10%;
   min-width: 100px;
   text-wrap: nowrap;
@@ -481,9 +485,13 @@ td:nth-child(3) {
 }
 
 /* Actions column */
-td:nth-child(4) {
-  width: 15%;
+th:nth-child(5), td:nth-child(5) {
+  width: 28%;
   min-width: 150px;
+}
+
+th:nth-child(5) {
+  text-align: center;
 }
 
 @keyframes App-logo-spin {

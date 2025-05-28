@@ -53,7 +53,7 @@ export const EditableDescription = ({ task, onUpdate }: {
           />
           <div>
           <button className='edit-icon-clicked' onClick={handleSave} 
-            title="Save">✓
+            title="Save"> ✓ 
           </button>
           <button className= 'edit-icon-clicked' onClick={() => setIsEditing(false) } 
             title="Cancel">❌
