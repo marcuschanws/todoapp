@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { apiClient } from '../api/client';
 import { ErrorMessage } from './ErrorMessage';
+import { formatForInput, localToUTCISO } from '../utility/dateUtils';
 import '../App.css';
 
 interface EditDeadlineProps {
@@ -13,44 +14,20 @@ export const EditDeadline = ({ taskIdent, currentDeadline, onUpdate }: EditDeadl
   let [newDeadline, setNewDeadline] = useState(currentDeadline || '');
   const [error, setError] = useState('');
 
+    useEffect(() => {
+    setNewDeadline(formatForInput(currentDeadline));
+  }, [currentDeadline]);
+
   const handleUpdate = async () => {
     try {
-      if (newDeadline) {
-        const localDate = new Date(newDeadline);
-        const utcIsoString = new Date(
-          Date.UTC(
-            localDate.getFullYear(),
-            localDate.getMonth(),
-            localDate.getDate(),
-            localDate.getHours(),
-            localDate.getMinutes()
-          )
-        ).toISOString()
+      const deadlineUTC = localToUTCISO(newDeadline);
 
-        newDeadline = utcIsoString;
-      }
-
-      if (currentDeadline) {
-        const localDate = new Date(currentDeadline);
-        const utcIsoString = new Date(
-          Date.UTC(
-            localDate.getFullYear(),
-            localDate.getMonth(),
-            localDate.getDate(),
-            localDate.getHours(),
-            localDate.getMinutes()
-          )
-        ).toISOString()
-
-        currentDeadline = utcIsoString;
-      }
-
-      if (newDeadline === currentDeadline) {
+      if (deadlineUTC === currentDeadline) {
         setError('New selected deadline same as previous one');
         return false;
       }
 
-      await apiClient.put(`/ToDoTasks/UpdateDeadline/${taskIdent}`, newDeadline || null);
+      await apiClient.put(`/ToDoTasks/UpdateDeadline/${taskIdent}`, deadlineUTC || null);
       setError('');
       onUpdate();
     } catch (err) {

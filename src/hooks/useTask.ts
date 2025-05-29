@@ -40,19 +40,8 @@ export const useTasks = () => {
         Description: description.trim(),
       };
       
-      if (deadline) {
-        const localDate = new Date(deadline);
-        const utcIsoString = new Date(
-          Date.UTC(
-            localDate.getFullYear(),
-            localDate.getMonth(),
-            localDate.getDate(),
-            localDate.getHours(),
-            localDate.getMinutes()
-          )
-        ).toISOString()
-        createRequest.Deadline = utcIsoString;
-      }
+      if (deadline) 
+        createRequest.Deadline = deadline;
       
       await apiClient.post<Task>('/ToDoTasks/CreateTask/', createRequest);
       await fetchTasks();

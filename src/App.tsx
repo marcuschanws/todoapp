@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTasks } from './hooks/useTask';
 import { TaskTable } from './components/TaskTable';
 import { ErrorMessage } from './components/ErrorMessage';
+import { formatForInput, localToUTCISO } from './utility/dateUtils';
 import './App.css';
 
 export const App = () => {
@@ -11,7 +12,10 @@ export const App = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
-    const success = await createTask(newTask.description, newTask.deadline);
+
+    //Convert to UTC for saving
+    const deadlineUTC = localToUTCISO(newTask.deadline)
+    const success = await createTask(newTask.description, deadlineUTC);
 
     if (success) 
       setNewTask({ description: '', deadline: '' });
@@ -48,10 +52,10 @@ export const App = () => {
           className='date-input'
           title = 'Deadline for the task (optional)'
           type="datetime-local"
-          value={newTask.deadline}
+          value={formatForInput(newTask.deadline)}
           onChange={e => {
             clearError();
-            setNewTask(p => ({ ...p, deadline: e.target.value })); 
+            setNewTask(p => ({ ...p, deadline: localToUTCISO(e.target.value) || '' })); 
           }
         }
         />

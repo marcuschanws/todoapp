@@ -10,7 +10,8 @@ import { ErrorMessage } from './ErrorMessage';
 import '../App.css';
 import { CompleteButton } from './CompleteCelebration';
 import { useStatusFilter } from '../hooks/useStatusFilter';
-import { useTasks } from '../hooks/useTask';
+import { format } from 'date-fns-tz';
+import { formatToLocal } from '../utility/dateUtils';
 
 interface TaskTableProps {
   tasks: Task[];
@@ -129,7 +130,7 @@ export const TaskTable = ({ tasks, onUpdate }: TaskTableProps) => {
     if (!deadline || isDone) 
       return false;
 
-    return new Date(deadline).getTime() < new Date().getTime();
+    return new Date(new Date(deadline).toISOString()).getTime() < new Date(new Date().toISOString()).getTime();
   };
 
     return (
@@ -163,7 +164,7 @@ export const TaskTable = ({ tasks, onUpdate }: TaskTableProps) => {
               <td className="deadline-cell" width='30%'>
                 <div className="deadline-row">
                   {task.deadline ? (
-                    new Date(task.deadline).toLocaleString()
+                    format(new Date(task.deadline), 'dd-MM-yyyy HH:mm')
                   ) : (
                     <span className="no-deadline">No deadline</span>
                   )}
