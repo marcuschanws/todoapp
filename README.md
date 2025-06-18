@@ -13,17 +13,3 @@
 8. Sorting/filtering
 9. Tasks are displayed on a table that can be sorted according to deadline, alphabetical order or creation date
 10. A cute little animation when you complete a task and click on "Complete"
-
-# Todo Application Setup
-
-## Requirements
-- .NET 8 Runtime
-- Node.js 18+
-
-## Run Backend
-1. Navigate to `backend/publish`
-2. Run `dotnet TodoApi.dll`
-
-## Run Frontend
-1. Navigate to `frontend/build`
-2. Run `npx serve -s`
